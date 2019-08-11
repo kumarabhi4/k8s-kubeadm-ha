@@ -1,0 +1,5 @@
+---
+# tasks file for gce-compute-master
+
+- name: Provision compute instances for master nodes
+  script: ../files/provision-master.sh 

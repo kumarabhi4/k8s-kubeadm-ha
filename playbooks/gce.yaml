@@ -1,0 +1,6 @@
+- hosts: localhost
+  roles:
+    - gce-network
+    - gce-compute-master
+    - gce-compute-worker
+    - gce-lb

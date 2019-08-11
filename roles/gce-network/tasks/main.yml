@@ -1,0 +1,18 @@
+---
+# tasks file for gce
+
+- name: create a network
+  shell: "gcloud compute networks create k8s-stackx --subnet-mode custom"
+
+- name: Attache subnet to the network
+  shell: "gcloud compute networks subnets create k8s-subnet --network k8s-stackx --range 10.240.0.0/24"
+
+- name: Create internal firewall rule
+  shell: "gcloud compute firewall-rules create k8s-stackx-allow-internal --allow tcp,udp,icmp --network k8s-stackx --source-ranges 10.240.0.0/24,10.200.0.0/16"
+
+- name: Create external firewall rule
+  shell: "gcloud compute firewall-rules create k8s-stackx-allow-external --allow tcp:22,tcp:6443,icmp --network k8s-stackx --source-ranges 0.0.0.0/0"
+
+
+
+

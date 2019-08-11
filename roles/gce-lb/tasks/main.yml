@@ -1,0 +1,25 @@
+---
+# tasks file for gce-lb
+- name: Allocate static IP in the project
+  shell: "gcloud compute addresses create k8s-stackx --region $(gcloud config get-value compute/region)"
+
+- name: Health check for LB
+  shell: gcloud compute http-health-checks create kubernetes --description "Kubernetes Health Check" --host "kubernetes.default.svc.cluster.local" --request-path "/healthz"
+  
+
+- name: Firewall rule for LB
+  shell: gcloud compute firewall-rules create k8s-stackx-allow-health-check --network k8s-stackx --source-ranges 209.85.152.0/22,209.85.204.0/22,35.191.0.0/16 --allow tcp
+
+
+- name: Create target pools
+  shell: gcloud compute target-pools create kubernetes-target-pool --http-health-check kubernetes
+
+- name: Include master servers in the target pools
+  shell: gcloud compute target-pools add-instances kubernetes-target-pool --instances c1-master-0,c1-master-1,c1-master-2
+
+
+- name: Create forwarding rule from LB to master servers
+  script: ../files/create-fw-rule.sh
+
+
+

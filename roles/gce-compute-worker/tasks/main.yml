@@ -1,0 +1,4 @@
+---
+# tasks file for gce-compute-worker
+- name: Provision worker nodes
+  script: ../files/provision-worker.sh
